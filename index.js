@@ -1,21 +1,21 @@
-import * as THREE from './node_modules/three/build/three';
+// import * as THREE from './node_modules/three/build/three.min.js';
 
-// Scene
+// ************************ Scene ********************
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x002222);
 const fogColor = new THREE.Color(0x7b7b7b);
 // scene.fog = new THREE.Fog(fogColor, 2, 6);
 
-// Camera
+// ********************** Camera ***********************
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-// Loader
+// ****************** Loader ***********************
 const loader = new THREE.TextureLoader()
 
-// Textures
+// ***************** Textures ************************
 const texture = loader.load( "textures/texture2.jpg" );
 const planeTexture = loader.load( "img/forest.jpg");
 
@@ -26,7 +26,7 @@ const gemNormalTex = loader.load('textures/gem_textures/Crystal_004_normal.jpg')
 const gemRTex = loader.load('textures/gem_textures/Crystal_004_roughness.jpg');
 
 
-// Object
+// ******************** Object **************************
 // const geometry = new THREE.SphereGeometry(2, 25, 25);
 // const material = new THREE.MeshStandardMaterial( { color: 0xe5e5e5,
 //     metalness: 0.9,
@@ -41,39 +41,39 @@ const gemRTex = loader.load('textures/gem_textures/Crystal_004_roughness.jpg');
 // const cube = new THREE.Mesh( geometry, material );
 // scene.add( cube );
 
-// GlassObject
+// ******************* GlassObject *************************
 // const geometry2 = new THREE.IcosahedronGeometry(1, 0);
-const geometry2 = new THREE.SphereGeometry(1, 20, 20);
-const material2 = new THREE.MeshPhysicalMaterial({
-    emissive: new THREE.Color(0x001122),
-    // color: new THREE.Color(0xFF2200),
-    roughness: 0,
-    transmission: 1,
-    // transmissionMap: texture ,
-    thickness: 0.9,
-    clearcoat: 0.9,
+// const geometry2 = new THREE.SphereGeometry(1, 20, 20);
+// const material2 = new THREE.MeshPhysicalMaterial({
+//     emissive: new THREE.Color(0x001122),
+//     // color: new THREE.Color(0xFF2200),
+//     roughness: 0,
+//     transmission: 1,
+//     // transmissionMap: texture ,
+//     thickness: 0.9,
+//     clearcoat: 0.9,
 
-    /////////////////////////////////////////////////////////////
-    map: gemBCTex,
+//     /////////////////////////////////////////////////////////////
+//     map: gemBCTex,
 
-    displacementMap: gemHTex,
-    displacementScale: 2,
-    displacementBias: -0.5,
+//     displacementMap: gemHTex,
+//     displacementScale: 2,
+//     displacementBias: -0.5,
 
-    normalMap: gemNormalTex,
-    normalScale: new THREE.Vector2(-2, 4),
+//     normalMap: gemNormalTex,
+//     normalScale: new THREE.Vector2(-2, 4),
 
-    roughnessMap: gemRTex,
-    roughness: 0.9,
+//     roughnessMap: gemRTex,
+//     roughness: 0.9,
 
-    aoMap: gemAOTex,
-    aoMapIntensity: 0.9,
-});
-const mesh = new THREE.Mesh(geometry2, material2)
-mesh.position.set(0, 0, 4)
-scene.add(mesh);
+//     aoMap: gemAOTex,
+//     aoMapIntensity: 0.9,
+// });
+// const mesh = new THREE.Mesh(geometry2, material2)
+// mesh.position.set(0, 0, 4)
+// scene.add(mesh);
 
-// Gem
+// **************** Gem ******************
 // const gemGeometry = new THREE.SphereGeometry(2, 300, 300);
 // const gemMaterial = new THREE.MeshStandardMaterial({
 //     map: gemBCTex,
@@ -99,7 +99,7 @@ scene.add(mesh);
 // scene.add(gem);
 
 
-//******** GlassGem
+//******** GlassGem ****************8
 // const glassGemGeometry = new THREE.SphereGeometry(2, 10, 10)
 // const glassGemMaterial = new THREE.MeshStandardMaterial({
 //     roughness: 0,
@@ -110,21 +110,34 @@ scene.add(mesh);
 // const glassGem = new THREE.Mesh(glassGemGeometry,glassGemMaterial);
 // scene.add(glassGem);
 
-//Plane
-const planeGeometry = new THREE.PlaneGeometry(5, 5);
-const planeMaterial = new THREE.MeshBasicMaterial({map: planeTexture});
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-scene.add( plane );
+//**************** Plane ***********************88
+// const planeGeometry = new THREE.PlaneGeometry(5, 5);
+// const planeMaterial = new THREE.MeshBasicMaterial({map: planeTexture});
+// const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+// scene.add( plane );
+
+
+// ************** BufferPlane ******************
+const planeBufferGeometry = new THREE.PlaneBufferGeometry(20, 20, 200, 200);
+const planeBufferMaterial = new THREE.MeshPhongMaterial({color: 0xff0000, side: THREE.DoubleSide})
+const planeBuffer = new THREE.Mesh( planeBufferGeometry, planeBufferMaterial );
+planeBuffer.receiveShadow = true;
+planeBuffer.castShadow = true;
+planeBuffer.rotateX = - Math.PI / 2;
+planeBuffer.position.z = 2
+scene.add( planeBuffer );
+
+const count = planeBufferGeometry.attributes.position.count
 
 // RectLight
 // const rectLights = new THREE.RectLight(0xFFFFFF, 0.9, 2, 2);
 // scene.add(rectLights);
 
-// SpotLight
-const spotLight = new THREE.SpotLight( { color: 0xFFFFFF, intensity: 1});
-spotLight.position.set(0, -10, 0);
-spotLight.target = mesh;
-scene.add( spotLight );
+// SpotLight ********************
+// const spotLight = new THREE.SpotLight( { color: 0xFFFFFF, intensity: 1});
+// spotLight.position.set(0, -10, 0);
+// spotLight.target = mesh;
+// scene.add( spotLight );
 
 // const spotHelper = new THREE.SpotLightHelper( spotLight );
 // scene.add( spotHelper );
@@ -135,8 +148,8 @@ directionalLight.position.set(0, 5, 10);
 scene.add(directionalLight);
 
 // AmbientLight
-const ambientLight = new THREE.AmbientLight( { color: 0xFFFFFF, intensity: 0.9, power: 0.9})
-scene.add( ambientLight );
+// const ambientLight = new THREE.AmbientLight( { color: 0xFFFFFF, intensity: 0.9, power: 0.9})
+// scene.add( ambientLight );
 
 // RectLight
 const rectLight = new THREE.RectAreaLight( 0xffff00, 0.1,  1, 1 );
@@ -147,20 +160,37 @@ scene.add( rectLight );
 // Control
 // const controls = new THREE.OrbitControls( camera, renderer.domElement );
 // controls.update();
-// console.log(THREE);
 
-camera.position.z = 8;
+camera.position.z = 18;
+
 
 function animate() {
-    requestAnimationFrame( animate );
-    renderer.render( scene, camera );
+
+    const now = Date.now() / 600;
+    for( let i = 0; i < count; i++ ) {
+        const x = planeBufferGeometry.attributes.position.getX(i)
+        const y = planeBufferGeometry.attributes.position.getY(i)
+        const xsin = Math.sin(x - now)
+        const ycos = Math.cos(y + now)
+        // i%10 === 0 ? planeBufferGeometry.attributes.position.setZ(i, xsin + ycos) : null
+        planeBufferGeometry.attributes.position.setZ(i, 3 * xsin + 4 * ycos)
+    }
+
+    planeBufferGeometry.computeVertexNormals()
+    planeBufferGeometry.attributes.position.needsUpdate = true;
 
     // cube.rotation.x += 0.009;
     // cube.rotation.y += 0.007;
 
-    mesh.rotation.y += 0.0009;
+    // mesh.rotation.y += 0.0009;
     // gem.rotation.y += 0.0009;
+    planeBuffer.rotation.y += 0.004;
 
     // controls.update();
+
+
+
+    requestAnimationFrame( animate );
+    renderer.render( scene, camera );
 }
 animate();
